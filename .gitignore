@@ -57,3 +57,6 @@ Desktop.ini
 # Application specific
 backend/uploads/*
 !backend/uploads/.gitkeep
+
+
+
