@@ -1,0 +1,338 @@
+/* ============================= */
+/*  CALL MODAL - WHATSAPP STYLE  */
+/* ============================= */
+
+.call-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.call-modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    text-align: center;
+    min-width: 350px;
+    min-height: 450px;
+}
+
+.call-modal.video-mode {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    min-width: 100%;
+    min-height: 100%;
+}
+
+/* Video Container */
+.video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #000;
+}
+
+.remote-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Remote video placeholder when no stream */
+.remote-video-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #1a1a1a;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.remote-video-placeholder .placeholder-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: var(--wa-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    font-weight: 500;
+    color: white;
+    margin-bottom: 16px;
+}
+
+.remote-video-placeholder p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.local-video {
+    position: absolute;
+    bottom: 100px;
+    right: 20px;
+    width: 150px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    z-index: 10;
+    background: #000;
+}
+
+/* Centered local video when not connected yet */
+.local-video.local-video-center {
+    position: relative;
+    bottom: auto;
+    right: auto;
+    width: 200px;
+    height: 280px;
+    margin: 20px auto;
+}
+
+/* No camera indicator */
+.local-video.no-camera {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.8);
+    gap: 4px;
+}
+
+.local-video.no-camera .material-icons {
+    font-size: 32px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.no-camera-text {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Stream info for debugging */
+.stream-info {
+    margin: 8px 0 0;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* Call Info */
+.call-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    z-index: 1;
+}
+
+.video-mode .call-info {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    right: 0;
+}
+
+.call-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: var(--wa-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    font-weight: 500;
+    color: white;
+    box-shadow: 0 4px 20px rgba(0, 168, 132, 0.4);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow: 0 4px 20px rgba(0, 168, 132, 0.4);
+    }
+
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 4px 30px rgba(0, 168, 132, 0.6);
+    }
+}
+
+.video-mode .call-avatar {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+}
+
+.call-username {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 500;
+    color: white;
+}
+
+.call-status {
+    margin: 0;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.call-type {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.call-type .material-icons {
+    font-size: 18px;
+}
+
+/* Call Actions */
+.call-actions {
+    display: flex;
+    gap: 24px;
+    margin-top: 60px;
+    z-index: 1;
+}
+
+.video-mode .call-actions {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 0;
+}
+
+.call-btn {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.call-btn .material-icons {
+    font-size: 28px;
+    color: white;
+}
+
+.call-btn.accept {
+    background: var(--wa-green);
+}
+
+.call-btn.accept:hover {
+    background: var(--wa-green-light);
+    transform: scale(1.1);
+}
+
+.call-btn.reject {
+    background: #f15c6d;
+}
+
+.call-btn.reject:hover {
+    background: #e74c5c;
+    transform: scale(1.1);
+}
+
+.call-btn.control {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.call-btn.control:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.call-btn.control.active {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+/* Incoming call animation */
+.call-modal-overlay.incoming .call-avatar {
+    animation: ring 1s infinite;
+}
+
+@keyframes ring {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+        transform: rotate(-10deg);
+    }
+
+    20%,
+    40%,
+    60%,
+    80% {
+        transform: rotate(10deg);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .call-modal {
+        padding: 20px;
+        min-width: 100%;
+        min-height: 100%;
+    }
+
+    .local-video {
+        width: 100px;
+        height: 140px;
+        bottom: 120px;
+        right: 10px;
+    }
+
+    .call-btn {
+        width: 56px;
+        height: 56px;
+    }
+
+    .call-btn .material-icons {
+        font-size: 24px;
+    }
+}

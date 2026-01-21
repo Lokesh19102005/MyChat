@@ -1,0 +1,154 @@
+/* ============================= */
+/*  MYCHAT - WHATSAPP DESIGN     */
+/* ============================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+/* WhatsApp Dark Theme Color Palette */
+:root {
+  /* Background Colors */
+  --wa-bg-dark: #111b21;
+  --wa-bg-darker: #0b141a;
+  --wa-bg-panel: #202c33;
+  --wa-bg-hover: #2a3942;
+  --wa-bg-input: #2a3942;
+  --wa-bg-message-out: #005c4b;
+  --wa-bg-message-in: #202c33;
+
+  /* Border Colors */
+  --wa-border: #2f3b43;
+  --wa-border-light: #3b4a54;
+
+  /* Accent Colors */
+  --wa-green: #00a884;
+  --wa-green-light: #25d366;
+  --wa-green-dark: #005c4b;
+  --wa-blue: #53bdeb;
+  --wa-blue-light: #6bcae2;
+
+  /* Text Colors */
+  --wa-text-primary: #e9edef;
+  --wa-text-secondary: #8696a0;
+  --wa-text-muted: #667781;
+  --wa-text-green: #00a884;
+
+  /* Status Colors */
+  --wa-online: #25d366;
+  --wa-typing: #25d366;
+  --wa-unread: #25d366;
+  --wa-error: #f15c6d;
+
+  /* Typography */
+  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 20px;
+  --space-2xl: 24px;
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 50%;
+
+  /* Transitions */
+  --transition-fast: 0.1s ease;
+  --transition-normal: 0.2s ease;
+}
+
+/* Reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-primary);
+  background: var(--wa-bg-dark);
+  color: var(--wa-text-primary);
+  font-size: 14px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Selection */
+::selection {
+  background: rgba(0, 168, 132, 0.3);
+  color: var(--wa-text-primary);
+}
+
+/* Scrollbar - WhatsApp Style */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(134, 150, 160, 0.4);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(134, 150, 160, 0.6);
+}
+
+/* Focus Outline */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--wa-green);
+  outline-offset: 2px;
+}
+
+/* Links */
+a {
+  color: var(--wa-blue);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Utility Classes */
+.text-primary {
+  color: var(--wa-text-primary);
+}
+
+.text-secondary {
+  color: var(--wa-text-secondary);
+}
+
+.text-muted {
+  color: var(--wa-text-muted);
+}
+
+.text-green {
+  color: var(--wa-green);
+}
+
+/* Material Icons */
+.material-icons {
+  font-size: 24px;
+  user-select: none;
+}

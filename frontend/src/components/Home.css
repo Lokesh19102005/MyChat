@@ -1,0 +1,134 @@
+/* ============================= */
+/*     HOME - WHATSAPP LAYOUT    */
+/* ============================= */
+
+.home-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: var(--wa-bg-dark);
+}
+
+/* Chat Area */
+.chat-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--wa-bg-darker);
+}
+
+/* Welcome Screen */
+.welcome-screen {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--wa-bg-darker);
+  border-bottom: 6px solid var(--wa-green);
+}
+
+.welcome-content {
+  text-align: center;
+  max-width: 500px;
+  padding: 40px;
+}
+
+.welcome-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 24px;
+  background: var(--wa-bg-panel);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.welcome-icon .material-icons {
+  font-size: 40px;
+  color: var(--wa-text-secondary);
+}
+
+.welcome-content h2 {
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--wa-text-primary);
+  margin: 0 0 16px;
+}
+
+.welcome-content p {
+  font-size: 14px;
+  color: var(--wa-text-secondary);
+  margin: 0 0 8px;
+  line-height: 1.6;
+}
+
+.welcome-hint {
+  margin-top: 24px !important;
+  padding-top: 24px;
+  border-top: 1px solid var(--wa-border);
+  color: var(--wa-text-muted) !important;
+  font-size: 13px !important;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .home-container {
+    flex-direction: column;
+  }
+
+  .chat-area {
+    height: calc(100vh - 56px);
+  }
+
+  .welcome-screen {
+    border-bottom: none;
+  }
+
+  .welcome-content {
+    padding: 20px;
+  }
+
+  .welcome-content h2 {
+    font-size: 22px;
+  }
+}
+
+/* ============================= */
+/*       LIGHT THEME             */
+/* ============================= */
+
+.light-theme.home-container,
+.light-theme .home-container {
+  background: #f0f2f5;
+}
+
+.light-theme .chat-area {
+  background: #efeae2;
+}
+
+.light-theme .welcome-screen {
+  background: #f0f2f5;
+}
+
+.light-theme .welcome-icon {
+  background: #e7fce3;
+}
+
+.light-theme .welcome-icon .material-icons {
+  color: #00a884;
+}
+
+.light-theme .welcome-content h2 {
+  color: #111b21;
+}
+
+.light-theme .welcome-content p {
+  color: #667781;
+}
+
+.light-theme .welcome-hint {
+  border-top-color: #d1d7db;
+}

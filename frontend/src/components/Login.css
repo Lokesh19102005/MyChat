@@ -1,0 +1,130 @@
+/* ============================= */
+/*   LOGIN - WHATSAPP STYLE      */
+/* ============================= */
+
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--wa-bg-dark);
+    padding: 20px;
+}
+
+.login-form {
+    width: 100%;
+    max-width: 400px;
+    background: var(--wa-bg-panel);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.login-form h2 {
+    text-align: center;
+    color: var(--wa-text-primary);
+    font-size: 24px;
+    font-weight: 500;
+    margin: 0 0 32px;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    background: var(--wa-bg-input);
+    border: 1px solid var(--wa-border);
+    border-radius: var(--radius-md);
+    color: var(--wa-text-primary);
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color var(--transition-fast);
+}
+
+.login-form input::placeholder {
+    color: var(--wa-text-muted);
+}
+
+.login-form input:focus {
+    border-color: var(--wa-green);
+    outline: none;
+}
+
+.login-form button[type="submit"] {
+    width: 100%;
+    padding: 14px;
+    background: var(--wa-green);
+    border: none;
+    border-radius: var(--radius-md);
+    color: white;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background var(--transition-fast);
+}
+
+.login-form button[type="submit"]:hover {
+    background: var(--wa-green-light);
+}
+
+.forget-pass {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 13px;
+    color: var(--wa-text-secondary);
+}
+
+.reset-link {
+    color: var(--wa-blue);
+    cursor: pointer;
+    margin-left: 4px;
+}
+
+.reset-link:hover {
+    text-decoration: underline;
+}
+
+.signup-redirect {
+    text-align: center;
+    margin-top: 16px;
+    padding-top: 20px;
+    border-top: 1px solid var(--wa-border);
+    font-size: 13px;
+    color: var(--wa-text-secondary);
+}
+
+.signup-link {
+    color: var(--wa-blue);
+    cursor: pointer;
+    margin-left: 4px;
+}
+
+.signup-link:hover {
+    text-decoration: underline;
+}
+
+/* Light Theme */
+.light-theme .login-container {
+    background: #f0f2f5;
+}
+
+.light-theme .login-form {
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.light-theme .login-form h2 {
+    color: #111b21;
+}
+
+.light-theme .login-form input {
+    background: #f0f2f5;
+    border-color: #d1d7db;
+    color: #111b21;
+}
+
+.light-theme .forget-pass,
+.light-theme .signup-redirect {
+    color: #667781;
+    border-top-color: #d1d7db;
+}
