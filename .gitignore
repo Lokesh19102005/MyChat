@@ -50,6 +50,7 @@ Desktop.ini
 *.suo
 *.ntvs
 *.njsproj
+
 *.sln
 
 # Application specific
