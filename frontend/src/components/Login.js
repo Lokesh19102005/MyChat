@@ -53,7 +53,7 @@ const Login = ({ setUser }) => {
 
         try {
             // 1️⃣ login
-            const { data } = await axios.post(
+            await axios.post(
                 `${API_URL}/api/auth/login`,
                 { email, password },
                 { withCredentials: true }

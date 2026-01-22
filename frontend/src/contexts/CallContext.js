@@ -153,6 +153,29 @@ export const CallProvider = ({ children, currentUser }) => {
         }
     };
 
+    // End call
+    const endCall = useCallback((reason = 'user_hangup') => {
+        if (callIdRef.current && remoteUserRef.current) {
+            socket.emit('call:end', {
+                callId: callIdRef.current,
+                from: currentUser.userId,
+                to: getRemoteUserId(remoteUserRef.current),
+                reason
+            });
+        }
+
+        setCallState('ended');
+        setCallEndReason(reason);
+        cleanup();
+
+        setTimeout(() => {
+            setCallState('idle');
+            setCallId(null);
+            setRemoteUser(null);
+            setCallEndReason(null);
+        }, 2000);
+    }, [currentUser, cleanup]);
+
     // Create and setup peer connection
     const setupPeerConnection = useCallback((targetUserId) => {
         console.log('📞 Setting up peer connection for:', targetUserId);
@@ -234,7 +257,7 @@ export const CallProvider = ({ children, currentUser }) => {
         }
 
         return pc;
-    }, [currentUser]);
+    }, [currentUser, endCall]);
 
     // Start outgoing call (CALLER)
     const startCall = async (targetUser, type) => {
@@ -315,28 +338,7 @@ export const CallProvider = ({ children, currentUser }) => {
         cleanup();
     };
 
-    // End call
-    const endCall = useCallback((reason = 'user_hangup') => {
-        if (callIdRef.current && remoteUserRef.current) {
-            socket.emit('call:end', {
-                callId: callIdRef.current,
-                from: currentUser.userId,
-                to: getRemoteUserId(remoteUserRef.current),
-                reason
-            });
-        }
 
-        setCallState('ended');
-        setCallEndReason(reason);
-        cleanup();
-
-        setTimeout(() => {
-            setCallState('idle');
-            setCallId(null);
-            setRemoteUser(null);
-            setCallEndReason(null);
-        }, 2000);
-    }, [currentUser, cleanup]);
 
     // Toggle mute
     const toggleMute = () => {
