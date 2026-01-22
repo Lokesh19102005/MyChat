@@ -1,8 +1,6 @@
 import 'dotenv/config';
 import path from 'path';
 
-// Load .env reliably even if process is started from repo root
-// dotenv.config({ path: path.resolve(process.cwd(), 'backend', '.env') });
 import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
@@ -19,16 +17,13 @@ import cookieParser from 'cookie-parser';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
-// Debug: Check if env variables are loaded
-console.log('EMAIL_USER:', process.env.EMAIL_USER);
-console.log('EMAIL_PASS:', process.env.EMAIL_PASS);
-
 const app = express();
 const server = http.createServer(app);
+const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:3000';
+
 const io = new Server(server, {
     cors: {
-        origin: 'http://localhost:3000',
+        origin: CLIENT_URL,
         methods: ['GET', 'POST'],
         credentials: true
     }
@@ -36,7 +31,7 @@ const io = new Server(server, {
 
 
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: CLIENT_URL,
     credentials: true
 }));
 

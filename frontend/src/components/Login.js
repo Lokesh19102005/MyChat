@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
+import { API_URL } from "../config";
 
 const Login = ({ setUser }) => {
     const [email, setEmail] = useState('');
@@ -53,7 +54,7 @@ const Login = ({ setUser }) => {
         try {
             // 1️⃣ login
             const { data } = await axios.post(
-                "http://localhost:5000/api/auth/login",
+                `${API_URL}/api/auth/login`,
                 { email, password },
                 { withCredentials: true }
             );
@@ -67,7 +68,7 @@ const Login = ({ setUser }) => {
         try {
             // 2️⃣ fetch /me
             const res = await axios.get(
-                'http://localhost:5000/api/auth/me',
+                `${API_URL}/api/auth/me`,
                 { withCredentials: true }
             );
             console.log("✅ /me response:", res.data);

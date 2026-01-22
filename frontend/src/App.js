@@ -10,6 +10,7 @@ import ResetPassword from './components/ResetPassword';
 import { CallProvider } from './contexts/CallContext';
 import CallModal from './components/CallModal';
 import './App.css';
+import { API_URL } from "./config";
 
 const App = () => {
     const [user, setUser] = useState(null); // user = {userId, email, username}
@@ -19,7 +20,7 @@ const App = () => {
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/auth/me', {
+                const res = await axios.get(`${API_URL}/api/auth/me`, {
                     withCredentials: true
                 });
                 setUser(res.data); // Set user if token is valid

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import socket from '../socket';
 import './UserList.css';
+import { API_URL } from "../config";
 
 // Generate consistent color from username
 const getAvatarColor = (name) => {
@@ -27,7 +28,7 @@ const UserList = ({ selectUser, currentUser, selectedUser, onUserSelect }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const { data } = await axios.get("http://localhost:5000/api/messages/users", {
+        const { data } = await axios.get(`${API_URL}/api/messages/users`, {
           withCredentials: true,
         });
         const filtered = data.filter((user) => user._id !== currentUser.userId);

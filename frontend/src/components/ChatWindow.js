@@ -4,6 +4,7 @@ import axios from "axios";
 import socket from "../socket";
 import { useCall } from "../contexts/CallContext";
 import "./ChatWindow.css";
+import { API_URL } from "../config";
 
 // Simple emoji list for picker
 const EMOJI_LIST = [
@@ -90,7 +91,7 @@ const ChatWindow = ({ selectedUser, onBack, isMobile, currentUser, isOnline }) =
     const fetchMessages = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:5000/api/messages/get/${currentUser.userId}/${selectedUser._id}`,
+          `${API_URL}/api/messages/get/${currentUser.userId}/${selectedUser._id}`,
           { withCredentials: true }
         );
         setMessages(data);
@@ -189,7 +190,7 @@ const ChatWindow = ({ selectedUser, onBack, isMobile, currentUser, isOnline }) =
 
     try {
       const { data } = await axios.post(
-        "http://localhost:5000/api/messages/send",
+        `${API_URL}/api/messages/send`,
         form,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -242,7 +243,7 @@ const ChatWindow = ({ selectedUser, onBack, isMobile, currentUser, isOnline }) =
 
         try {
           const { data } = await axios.post(
-            "http://localhost:5000/api/messages/send",
+            `${API_URL}/api/messages/send`,
             form,
             { headers: { "Content-Type": "multipart/form-data" }, withCredentials: true }
           );

@@ -5,6 +5,7 @@ import UserList from './UserList';
 import Sidebar from './Sidebar';
 import ChatWindow from './ChatWindow';
 import './Home.css';
+import { API_URL } from "../config";
 
 const Home = ({ user, setUser }) => {
   const [selectedUser, setSelectedUser] = useState(null);
@@ -36,7 +37,7 @@ const Home = ({ user, setUser }) => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:5000/api/auth/logout", {}, { withCredentials: true });
+      await axios.post(`${API_URL}/api/auth/logout`, {}, { withCredentials: true });
     } catch (err) {
       // Ignore errors
       console.log(err);
