@@ -17,13 +17,13 @@ const router = express.Router();
 //     }
 // });
 
-router.post("/send",authenticateMiddleware, upload.single("file"), async (req, res) => {
+router.post("/send", authenticateMiddleware, upload.single("file"), async (req, res) => {
   const { senderId, receiverId, message } = req.body;
   let fileUrl = null;
   let fileType = null;
 
   if (req.file) {
-    fileUrl = `/uploads/${req.file.filename}`;
+    fileUrl = req.file.path;
     fileType = req.file.mimetype;
   }
 
@@ -55,7 +55,7 @@ router.post("/send",authenticateMiddleware, upload.single("file"), async (req, r
 //     }
 // });
 
-router.get("/users",authenticateMiddleware, async (req, res) => {
+router.get("/users", authenticateMiddleware, async (req, res) => {
   try {
     const users = await User.find().select("-password"); // remove passwords
     res.status(200).json(users);
@@ -65,7 +65,7 @@ router.get("/users",authenticateMiddleware, async (req, res) => {
 });
 
 // Get messages between two users
-router.get("/get/:senderId/:receiverId",authenticateMiddleware, async (req, res) => {
+router.get("/get/:senderId/:receiverId", authenticateMiddleware, async (req, res) => {
   const { senderId, receiverId } = req.params;
   try {
     const messages = await Message.find({

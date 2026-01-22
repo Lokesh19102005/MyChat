@@ -131,7 +131,7 @@ export const CallProvider = ({ children, currentUser }) => {
 
             // CRITICAL: ALERT USER ON MOBILE
             if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
-                alert("❌ Camera/Mic blocked! \n\nIf you are on mobile, Browser blocks camera on HTTP.\n\nType this in Chrome address bar:\nchrome://flags/#unsafely-treat-insecure-origin-as-secure\n\nEnable it and add: http://10.162.129.105:3000");
+                alert("❌ Camera/Mic blocked! \n\nIf you are on mobile, Browser blocks camera on HTTP.\n\nType this in Chrome address bar:\nchrome://flags/#unsafely-treat-insecure-origin-as-secure\n\nEnable it and add: http://localhost:3000");
             } else if (error.name === 'NotFoundError') {
                 alert("❌ No camera/mic found!");
             }

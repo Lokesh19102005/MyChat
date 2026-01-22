@@ -27,10 +27,10 @@ const UserList = ({ selectUser, currentUser, selectedUser, onUserSelect }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await axios.get('http://10.162.129.105:5000/api/messages/users', {
+        const { data } = await axios.get("http://localhost:5000/api/messages/users", {
           withCredentials: true,
         });
-        const filtered = res.data.filter((user) => user._id !== currentUser.userId);
+        const filtered = data.filter((user) => user._id !== currentUser.userId);
         setUsers(filtered);
       } catch (error) {
         console.error('Error fetching users:', error);

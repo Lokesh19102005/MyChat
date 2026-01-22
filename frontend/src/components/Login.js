@@ -52,8 +52,8 @@ const Login = ({ setUser }) => {
 
         try {
             // 1️⃣ login
-            await axios.post(
-                'http://10.162.129.105:5000/api/auth/login',
+            const { data } = await axios.post(
+                "http://localhost:5000/api/auth/login",
                 { email, password },
                 { withCredentials: true }
             );
@@ -67,7 +67,7 @@ const Login = ({ setUser }) => {
         try {
             // 2️⃣ fetch /me
             const res = await axios.get(
-                'http://10.162.129.105:5000/api/auth/me',
+                'http://localhost:5000/api/auth/me',
                 { withCredentials: true }
             );
             console.log("✅ /me response:", res.data);

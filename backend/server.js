@@ -11,6 +11,7 @@ import cors from 'cors';
 import authRoutes from './routes/auth.js';
 import messageRoutes from './routes/messages.js';
 import { fileURLToPath } from "url";
+import User from './models/User.js';
 import Message from './models/Message.js';
 import Call from './models/Call.js';
 import cookieParser from 'cookie-parser';
@@ -27,7 +28,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: 'http://10.162.129.105:3000',
+        origin: 'http://localhost:3000',
         methods: ['GET', 'POST'],
         credentials: true
     }
@@ -35,7 +36,7 @@ const io = new Server(server, {
 
 
 app.use(cors({
-    origin: 'http://10.162.129.105:3000',
+    origin: 'http://localhost:3000',
     credentials: true
 }));
 
@@ -57,7 +58,7 @@ app.use('/api/messages', messageRoutes);
 //     }
 // }));
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 // MongoDB Connection
@@ -101,7 +102,13 @@ io.on('connection', (socket) => {
     // Custom event to register userId with this socket
     socket.on('register', async (userId) => {
         users[userId] = socket.id;
+
+        // Update user status
+        await User.findByIdAndUpdate(userId, { isOnline: true });
+
         io.emit('onlineUsers', Object.keys(users)); // 👈 broadcast updated online users
+        io.emit('userStatusUpdate', { userId, status: 'online' });
+
         console.log(`User ${userId} registered with socket ${socket.id}`);
 
         // 🔄 Mark messages as delivered for this user
@@ -409,7 +416,7 @@ io.on('connection', (socket) => {
     });
 
     // ❌ Disconnect
-    socket.on('disconnect', () => {
+    socket.on('disconnect', async () => {
         // Clean up any active calls for this user
         for (const callId in global.activeCalls) {
             const call = global.activeCalls[callId];
@@ -430,12 +437,29 @@ io.on('connection', (socket) => {
             }
         }
 
+        let disconnectedUserId = null;
         for (const userId in users) {
             if (users[userId] === socket.id) {
+                disconnectedUserId = userId;
                 delete users[userId];
                 break;
             }
         }
+
+        if (disconnectedUserId) {
+            const lastSeen = new Date();
+            await User.findByIdAndUpdate(disconnectedUserId, {
+                isOnline: false,
+                lastSeen: lastSeen
+            });
+
+            io.emit('userStatusUpdate', {
+                userId: disconnectedUserId,
+                status: 'offline',
+                lastSeen
+            });
+        }
+
         console.log('A user disconnected:', socket.id);
         io.emit('onlineUsers', Object.keys(users));
     });

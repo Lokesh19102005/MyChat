@@ -28,6 +28,10 @@ const ChatWindow = ({ selectedUser, onBack, isMobile, currentUser, isOnline }) =
   const [previewImage, setPreviewImage] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [typingStatus, setTypingStatus] = useState("");
+  const [userStatus, setUserStatus] = useState(isOnline ? "online" : "offline");
+  const [lastSeen, setLastSeen] = useState(null);
+  const typingTimeoutRef = useRef(null);
 
   const notificationSoundRef = useRef(new Audio("/notification.mp3"));
   const messagesEndRef = useRef(null);
@@ -86,7 +90,7 @@ const ChatWindow = ({ selectedUser, onBack, isMobile, currentUser, isOnline }) =
     const fetchMessages = async () => {
       try {
         const { data } = await axios.get(
-          `http://10.162.129.105:5000/api/messages/get/${currentUser.userId}/${selectedUser._id}`,
+          `http://localhost:5000/api/messages/get/${currentUser.userId}/${selectedUser._id}`,
           { withCredentials: true }
         );
         setMessages(data);
@@ -132,12 +136,39 @@ const ChatWindow = ({ selectedUser, onBack, isMobile, currentUser, isOnline }) =
       );
     };
 
+    const handleShowTyping = ({ senderId }) => {
+      if (senderId === selectedUser?._id) {
+        setTypingStatus("Typing...");
+      }
+    };
+
+    const handleHideTyping = ({ senderId }) => {
+      if (senderId === selectedUser?._id) {
+        setTypingStatus("");
+      }
+    };
+
+    const handleUserStatusUpdate = ({ userId, status, lastSeen }) => {
+      if (userId === selectedUser?._id) {
+        setUserStatus(status);
+        if (status === 'offline') {
+          setLastSeen(lastSeen);
+        }
+      }
+    };
+
     socket.on("receiveMessage", handleReceiveMessage);
     socket.on("messageStatusUpdated", handleStatusUpdate);
+    socket.on("showTyping", handleShowTyping);
+    socket.on("hideTyping", handleHideTyping);
+    socket.on("userStatusUpdate", handleUserStatusUpdate);
 
     return () => {
       socket.off("receiveMessage", handleReceiveMessage);
       socket.off("messageStatusUpdated", handleStatusUpdate);
+      socket.off("showTyping", handleShowTyping);
+      socket.off("hideTyping", handleHideTyping);
+      socket.off("userStatusUpdate", handleUserStatusUpdate);
     };
   }, [selectedUser, currentUser]);
 
@@ -158,7 +189,7 @@ const ChatWindow = ({ selectedUser, onBack, isMobile, currentUser, isOnline }) =
 
     try {
       const { data } = await axios.post(
-        "http://10.162.129.105:5000/api/messages/send",
+        "http://localhost:5000/api/messages/send",
         form,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -175,7 +206,17 @@ const ChatWindow = ({ selectedUser, onBack, isMobile, currentUser, isOnline }) =
     }
   };
 
-  const handleTyping = (e) => setMessage(e.target.value);
+  const handleTyping = (e) => {
+    setMessage(e.target.value);
+
+    socket.emit("typing", { senderId: currentUser.userId, receiverId: selectedUser._id });
+
+    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+
+    typingTimeoutRef.current = setTimeout(() => {
+      socket.emit("stopTyping", { senderId: currentUser.userId, receiverId: selectedUser._id });
+    }, 2000);
+  };
 
   // Voice message handlers
   const startRecording = async () => {
@@ -201,7 +242,7 @@ const ChatWindow = ({ selectedUser, onBack, isMobile, currentUser, isOnline }) =
 
         try {
           const { data } = await axios.post(
-            "http://10.162.129.105:5000/api/messages/send",
+            "http://localhost:5000/api/messages/send",
             form,
             { headers: { "Content-Type": "multipart/form-data" }, withCredentials: true }
           );
@@ -291,16 +332,22 @@ const ChatWindow = ({ selectedUser, onBack, isMobile, currentUser, isOnline }) =
           {msg.fileUrl && msg.fileType?.startsWith("image") && (
             <img
               className="message-image"
-              src={`http://10.162.129.105:5000${msg.fileUrl}`}
+              src={msg.fileUrl}
               alt=""
-              onClick={() => setPreviewImage(`http://10.162.129.105:5000${msg.fileUrl}`)}
+              onClick={() => setPreviewImage(msg.fileUrl)}
             />
           )}
 
           {msg.fileUrl && msg.fileType?.startsWith("audio") && (
             <audio controls className="message-audio">
-              <source src={`http://10.162.129.105:5000${msg.fileUrl}`} type={msg.fileType} />
+              <source src={msg.fileUrl} type={msg.fileType} />
             </audio>
+          )}
+
+          {msg.fileUrl && msg.fileType?.startsWith("video") && (
+            <video controls className="message-video" style={{ maxWidth: "100%", borderRadius: "8px" }}>
+              <source src={msg.fileUrl} type={msg.fileType} />
+            </video>
           )}
 
           <div className="message-meta">
@@ -330,8 +377,16 @@ const ChatWindow = ({ selectedUser, onBack, isMobile, currentUser, isOnline }) =
 
         <div className="header-info">
           <h3 className="header-name">{selectedUser?.username || "Select a chat"}</h3>
-          <span className={`header-status ${isOnline ? 'online' : ''}`}>
-            {isOnline ? 'Online' : 'Offline'}
+          <span className={`header-status ${userStatus === 'online' ? 'online' : ''}`}>
+            {typingStatus ? (
+              <span className="typing-text">{typingStatus}</span>
+            ) : userStatus === 'online' ? (
+              'Online'
+            ) : lastSeen ? (
+              `Last seen ${new Date(lastSeen).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
+            ) : (
+              'Offline'
+            )}
           </span>
         </div>
 

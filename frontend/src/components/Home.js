@@ -36,9 +36,10 @@ const Home = ({ user, setUser }) => {
 
   const handleLogout = async () => {
     try {
-      await axios.post('http://10.162.129.105:5000/api/auth/logout', {}, { withCredentials: true });
+      await axios.post("http://localhost:5000/api/auth/logout", {}, { withCredentials: true });
     } catch (err) {
       // Ignore errors
+      console.log(err);
     }
     if (typeof setUser === 'function') setUser(null);
     window.location.href = '/';
