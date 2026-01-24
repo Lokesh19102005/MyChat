@@ -11,6 +11,9 @@ import { CallProvider } from './contexts/CallContext';
 import CallModal from './components/CallModal';
 import './App.css';
 import { API_URL } from "./config";
+import axios from "axios";
+
+axios.defaults.withCredentials = true;   // 🔴 GLOBAL FIX
 
 const App = () => {
     const [user, setUser] = useState(null); // user = {userId, email, username}

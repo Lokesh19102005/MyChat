@@ -64,6 +64,7 @@ router.post('/login', async (req, res) => {
         //     sameSite: 'strict',
         //     maxAge: 60 * 60 * 1000 // 1 hour
         // });
+        res.setHeader("Access-Control-Allow-Credentials", "true");
 
         res.cookie("token", token, {
             httpOnly: true,
