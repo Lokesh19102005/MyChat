@@ -29,6 +29,7 @@ const io = new Server(server, {
     }
 });
 
+app.set("trust proxy", 1);
 
 app.use(cors({
     origin: CLIENT_URL,
