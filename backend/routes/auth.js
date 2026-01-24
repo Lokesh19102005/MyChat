@@ -67,8 +67,9 @@ router.post('/login', async (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: true,
-            secure: false,     // true only in production with HTTPS
-            sameSite: "lax"    // or "none" if using HTTPS and cross-site
+            secure: true,        // 🔴 REQUIRED on Render
+            sameSite: "none",   // 🔴 REQUIRED for cross-site cookies
+            maxAge: 7 * 24 * 60 * 60 * 1000 // optional (7 days)
         });
 
         res.status(200).json({ message: 'Login successful' });
