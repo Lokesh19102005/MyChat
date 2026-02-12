@@ -8,6 +8,8 @@ export const authenticateMiddleware = (req, res, next) => {
     return res.status(401).json({ message: "Unauthorized: No token provided" });
   }
 
+  console.log("VERIFY secret:", process.env.JWT_SECRET);
+
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.userId = decoded.id;
