@@ -1,3 +1,5 @@
+import jwt from 'jsonwebtoken';
+
 export const authenticateMiddleware = (req, res, next) => {
   console.log("🔥 RAW Cookie header:", req.headers.cookie);
   console.log("🔥 Parsed cookies:", req.cookies);
@@ -7,6 +9,8 @@ export const authenticateMiddleware = (req, res, next) => {
   if (!token) {
     return res.status(401).json({ message: "Unauthorized: No token provided" });
   }
+
+  console.log("VERIFY secret:", process.env.JWT_SECRET);
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
