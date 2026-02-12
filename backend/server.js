@@ -31,6 +31,8 @@ const io = new Server(server, {
 
 app.set("trust proxy", 1);
 
+console.log("CLIENT_URL at runtime =", process.env.CLIENT_URL);
+
 app.use(cors({
     origin: CLIENT_URL,
     credentials: true
