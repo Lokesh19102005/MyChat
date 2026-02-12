@@ -12,7 +12,19 @@ import CallModal from './components/CallModal';
 import './App.css';
 import { API_URL } from "./config";
 
-axios.defaults.withCredentials = true;   // 🔴 GLOBAL FIX
+// axios.defaults.withCredentials = true;   // 🔴 REMOVED
+
+// 🟢 Add Interceptor to request
+axios.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
 
 const App = () => {
     const [user, setUser] = useState(null); // user = {userId, email, username}
@@ -21,13 +33,19 @@ const App = () => {
     // Auto-login on page refresh
     useEffect(() => {
         const checkAuth = async () => {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                setLoading(false);
+                return;
+            }
+
             try {
-                const res = await axios.get(`${API_URL}/api/auth/me`, {
-                    withCredentials: true
-                });
+                const res = await axios.get(`${API_URL}/api/auth/me`);
                 setUser(res.data); // Set user if token is valid
             } catch (error) {
-                setUser(null); // No valid session
+                console.error("Auth check failed:", error);
+                localStorage.removeItem("token"); // Clear invalid token
+                setUser(null);
             } finally {
                 setLoading(false);
             }

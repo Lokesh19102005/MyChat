@@ -91,8 +91,7 @@ const ChatWindow = ({ selectedUser, onBack, isMobile, currentUser, isOnline }) =
     const fetchMessages = async () => {
       try {
         const { data } = await axios.get(
-          `${API_URL}/api/messages/get/${currentUser.userId}/${selectedUser._id}`,
-          { withCredentials: true }
+          `${API_URL}/api/messages/get/${currentUser.userId}/${selectedUser._id}`
         );
         setMessages(data);
 
@@ -193,8 +192,7 @@ const ChatWindow = ({ selectedUser, onBack, isMobile, currentUser, isOnline }) =
         `${API_URL}/api/messages/send`,
         form,
         {
-          headers: { "Content-Type": "multipart/form-data" },
-          withCredentials: true
+          headers: { "Content-Type": "multipart/form-data" }
         }
       );
 
@@ -245,7 +243,7 @@ const ChatWindow = ({ selectedUser, onBack, isMobile, currentUser, isOnline }) =
           const { data } = await axios.post(
             `${API_URL}/api/messages/send`,
             form,
-            { headers: { "Content-Type": "multipart/form-data" }, withCredentials: true }
+            { headers: { "Content-Type": "multipart/form-data" } }
           );
           socket.emit("sendMessage", data);
           setMessages((prev) => [...prev, data]);

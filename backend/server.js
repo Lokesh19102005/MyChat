@@ -25,7 +25,7 @@ const io = new Server(server, {
     cors: {
         origin: CLIENT_URL,
         methods: ['GET', 'POST'],
-        credentials: true
+        credentials: false
     }
 });
 
@@ -35,11 +35,11 @@ console.log("CLIENT_URL at runtime =", process.env.CLIENT_URL);
 
 app.use(cors({
     origin: CLIENT_URL,
-    credentials: true
+    credentials: false
 }));
 
 app.use(express.json());
-app.use(cookieParser());
+// app.use(cookieParser());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/messages', messageRoutes);
@@ -63,33 +63,6 @@ app.use('/api/messages', messageRoutes);
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log(err));
-
-// 🟢 SOCKET.IO setup
-// io.on('connection', (socket) => {
-//     console.log('A user connected:', socket.id);
-
-//     // Listen for message event
-//     socket.on('sendMessage', ({ senderId, receiverId, message }) => {
-
-//         console.log("s = ",senderId," , r = ",receiverId," , m = ",message);
-//         // Broadcast message to the receiver only
-//         io.to(receiverId).emit('receiveMessage', {
-//             senderId,
-//             message,
-//             timestamp: new Date()
-//         });
-//     });
-
-//     // Join a room with user ID (optional for targeting messages)
-//     socket.on('join', (userId) => {
-//         socket.join(userId);
-//         console.log(`${userId} joined their room`);
-//     });
-
-//     socket.on('disconnect', () => {
-//         console.log('User disconnected:', socket.id);
-//     });
-// });
 
 
 const users = {}; // userId -> socketId map

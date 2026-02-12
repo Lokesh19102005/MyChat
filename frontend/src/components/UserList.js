@@ -28,9 +28,7 @@ const UserList = ({ selectUser, currentUser, selectedUser, onUserSelect }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const { data } = await axios.get(`${API_URL}/api/messages/users`, {
-          withCredentials: true,
-        });
+        const { data } = await axios.get(`${API_URL}/api/messages/users`);
         const filtered = data.filter((user) => user._id !== currentUser.userId);
         setUsers(filtered);
       } catch (error) {

@@ -53,12 +53,14 @@ const Login = ({ setUser }) => {
 
         try {
             // 1️⃣ login
-            await axios.post(
+            const loginRes = await axios.post(
                 `${API_URL}/api/auth/login`,
-                { email, password },
-                { withCredentials: true }
+                { email, password }
             );
             console.log("✅ Login succeeded");
+
+            const { token } = loginRes.data;
+            localStorage.setItem("token", token); // 💾 Store token
 
         } catch (err) {
             console.error("Login error:", err.response?.data);
@@ -66,11 +68,8 @@ const Login = ({ setUser }) => {
         }
 
         try {
-            // 2️⃣ fetch /me
-            const res = await axios.get(
-                `${API_URL}/api/auth/me`,
-                { withCredentials: true }
-            );
+            // 2️⃣ fetch /me (Interceptor adds Authorization header)
+            const res = await axios.get(`${API_URL}/api/auth/me`);
             console.log("✅ /me response:", res.data);
 
             const { userId, username, email } = res.data;
