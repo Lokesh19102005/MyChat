@@ -113,17 +113,26 @@ router.get('/me', authenticateMiddleware, async (req, res) => {
 
 // FORGET PASSWORD ROUTE
 router.post('/forget-password', async (req, res) => {
+    console.log("🔹 Forget Password Route Hit");
+    console.log("🔹 Request Body:", req.body);
+
     try {
         const { email } = req.body;
 
         if (!email) {
+            console.log("❌ Email missing in request body");
             return res.status(400).json({ error: 'Email is required' });
         }
 
+        console.log("🔹 Searching for user with email:", email);
         const user = await User.findOne({ email });
+
         if (!user) {
+            console.log("❌ User not found for email:", email);
             return res.status(404).json({ error: 'User with this email does not exist' });
         }
+
+        console.log("✅ User found:", user.username);
 
         // Generate reset token
         const resetToken = crypto.randomBytes(32).toString('hex');
@@ -133,29 +142,39 @@ router.post('/forget-password', async (req, res) => {
         user.passwordResetToken = hashedToken;
         user.passwordResetExpires = Date.now() + 15 * 60 * 1000;
         await user.save();
+        console.log("✅ Reset token saved to database");
 
         // Create reset link
         const resetLink = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+        console.log("🔹 Generated Reset Link:", resetLink);
 
         // Send email using async/await
-        await transporter.sendMail({
-            from: process.env.EMAIL_USER,
-            to: email,
-            subject: 'Password Reset Request - MyChat',
-            html: `
-                <h2>Password Reset Request</h2>
-                <p>You requested to reset your password. Click the link below to reset it:</p>
-                <a href="${resetLink}" style="background-color: #4caf50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
-                    Reset Password
-                </a>
-                <p>This link will expire in 15 minutes.</p>
-                <p>If you didn't request this, please ignore this email.</p>
-            `
-        });
+        console.log("🔹 Attempting to send email...");
 
-        console.log('✅ Password reset email sent to:', email);
-        res.status(200).json({ message: 'Password reset link sent to your email' });
+        try {
+            await transporter.sendMail({
+                from: process.env.EMAIL_USER,
+                to: email,
+                subject: 'Password Reset Request - MyChat',
+                html: `
+                    <h2>Password Reset Request</h2>
+                    <p>You requested to reset your password. Click the link below to reset it:</p>
+                    <a href="${resetLink}" style="background-color: #4caf50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                        Reset Password
+                    </a>
+                    <p>This link will expire in 15 minutes.</p>
+                    <p>If you didn't request this, please ignore this email.</p>
+                `
+            });
+            console.log('✅ Password reset email sent successfully to:', email);
+            res.status(200).json({ message: 'Password reset link sent to your email' });
+        } catch (emailError) {
+            console.error("❌ Email sending failed:", emailError);
+            return res.status(500).json({ error: "Failed to send email. Check server logs." });
+        }
+
     } catch (error) {
+        console.error("❌ Error in forget-password route:", error);
         res.status(500).json({ error: error.message });
     }
 });
