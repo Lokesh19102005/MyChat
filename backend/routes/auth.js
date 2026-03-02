@@ -2,20 +2,14 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import User from '../models/User.js';
 import { authenticateMiddleware } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-// Configure Nodemailer
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    },
-});
+// Initialize Resend conditionally so server doesn't crash if .env is missing the key
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 // SIGNUP ROUTE
 router.post('/signup', async (req, res) => {
@@ -148,12 +142,17 @@ router.post('/forget-password', async (req, res) => {
         const resetLink = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
         console.log("🔹 Generated Reset Link:", resetLink);
 
-        // Send email using async/await
-        console.log("🔹 Attempting to send email...");
+        // Send email using Resend
+        console.log("🔹 Attempting to send email with Resend...");
+
+        if (!resend) {
+            console.error("❌ Resend API Key is missing in environment variables.");
+            return res.status(500).json({ error: "Email service is not configured. Missing API key." });
+        }
 
         try {
-            await transporter.sendMail({
-                from: process.env.EMAIL_USER,
+            const { data, error } = await resend.emails.send({
+                from: "onboarding@resend.dev",
                 to: email,
                 subject: 'Password Reset Request - MyChat',
                 html: `
@@ -166,10 +165,16 @@ router.post('/forget-password', async (req, res) => {
                     <p>If you didn't request this, please ignore this email.</p>
                 `
             });
-            console.log('✅ Password reset email sent successfully to:', email);
+
+            if (error) {
+                console.error("❌ Email sending failed:", error);
+                return res.status(500).json({ error: "Failed to send email. Check server logs." });
+            }
+
+            console.log('✅ Password reset email sent successfully to:', email, 'Data:', data);
             res.status(200).json({ message: 'Password reset link sent to your email' });
         } catch (emailError) {
-            console.error("❌ Email sending failed:", emailError);
+            console.error("❌ Email sending exception:", emailError);
             return res.status(500).json({ error: "Failed to send email. Check server logs." });
         }
 
