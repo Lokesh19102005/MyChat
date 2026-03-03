@@ -4,6 +4,7 @@ import axios from 'axios';
 import UserList from './UserList';
 import Sidebar from './Sidebar';
 import ChatWindow from './ChatWindow';
+import AIAssistant from './AIAssistant';
 import './Home.css';
 import { API_URL } from "../config";
 
@@ -12,6 +13,7 @@ const Home = ({ user, setUser }) => {
   const [isSelectedUserOnline, setIsSelectedUserOnline] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+  const [showAIAssistant, setShowAIAssistant] = useState(false);
 
   useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth < 768);
@@ -59,6 +61,7 @@ const Home = ({ user, setUser }) => {
           onLogout={handleLogout}
           onToggleTheme={handleToggleTheme}
           theme={theme}
+          onToggleAI={() => setShowAIAssistant(true)}
         />
       )}
 
@@ -95,6 +98,11 @@ const Home = ({ user, setUser }) => {
           </div>
         )}
       </div>
+
+      {/* AI Assistant Modal */}
+      {showAIAssistant && (
+        <AIAssistant onClose={() => setShowAIAssistant(false)} />
+      )}
     </div>
   );
 };

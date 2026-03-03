@@ -8,6 +8,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import authRoutes from './routes/auth.js';
 import messageRoutes from './routes/messages.js';
+import aiRoutes from './routes/ai.js';
 import { fileURLToPath } from "url";
 import User from './models/User.js';
 import Message from './models/Message.js';
@@ -43,6 +44,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/ai', aiRoutes);
 // Make uploads folder public
 // app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
 //     setHeaders: function (res, filePath) {

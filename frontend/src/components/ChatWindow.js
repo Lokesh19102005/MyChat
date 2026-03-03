@@ -32,6 +32,7 @@ const ChatWindow = ({ selectedUser, onBack, isMobile, currentUser, isOnline }) =
   const [typingStatus, setTypingStatus] = useState("");
   const [userStatus, setUserStatus] = useState(isOnline ? "online" : "offline");
   const [lastSeen, setLastSeen] = useState(null);
+  const [isAILoading, setIsAILoading] = useState(false);
   const typingTimeoutRef = useRef(null);
 
   const notificationSoundRef = useRef(new Audio("/notification.mp3"));
@@ -267,6 +268,37 @@ const ChatWindow = ({ selectedUser, onBack, isMobile, currentUser, isOnline }) =
     setIsRecording(false);
   };
 
+  // AI Suggestion Handler
+  const handleAISuggest = async () => {
+    if (!currentUser) return;
+    setIsAILoading(true);
+
+    try {
+      // Get the last few messages for context
+      const recentMessages = messages.slice(-5).map(m =>
+        m.senderId === currentUser.userId ? `Me: ${m.message}` : `${selectedUser.username}: ${m.message}`
+      ).join('\n');
+
+      const token = localStorage.getItem('token');
+      const response = await axios.post(`${API_URL}/api/ai/suggest`,
+        {
+          text: message,
+          context: recentMessages
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.data.suggestion) {
+        setMessage(response.data.suggestion);
+      }
+    } catch (error) {
+      console.error("AI Suggestion Error:", error);
+      alert("Failed to get AI suggestion.");
+    } finally {
+      setIsAILoading(false);
+    }
+  };
+
   // Format time utility
   const formatTime = (timestamp) =>
     new Date(timestamp).toLocaleTimeString([], {
@@ -480,6 +512,20 @@ const ChatWindow = ({ selectedUser, onBack, isMobile, currentUser, isOnline }) =
             onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && sendMessage()}
             placeholder="Type a message"
           />
+
+          <button
+            className={`input-btn ai-suggest-btn ${isAILoading ? 'loading' : ''}`}
+            onClick={handleAISuggest}
+            title="AI Suggestion"
+            disabled={isAILoading}
+            style={{ color: '#00a884', background: 'none', border: 'none', cursor: 'pointer', padding: '8px' }}
+          >
+            {isAILoading ? (
+              <span className="material-icons" style={{ animation: 'spin 1s linear infinite' }}>autorenew</span>
+            ) : (
+              <span className="material-icons">auto_awesome</span>
+            )}
+          </button>
         </div>
 
         {message.trim() || file ? (

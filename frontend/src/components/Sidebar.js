@@ -1,7 +1,7 @@
 import React from "react";
 import "./Sidebar.css";
 
-function Sidebar({ onToggleTheme, onLogout, theme }) {
+function Sidebar({ onToggleTheme, onLogout, theme, onToggleAI }) {
   return (
     <div className="sidebar">
       <div className="sidebar-top">
@@ -23,6 +23,11 @@ function Sidebar({ onToggleTheme, onLogout, theme }) {
         <button className="sidebar-btn" title="Share">
           <span className="material-icons">ios_share</span>
           <span className="sidebar-label">Share</span>
+        </button>
+
+        <button className="sidebar-btn" title="AI Assistant" onClick={onToggleAI}>
+          <span className="material-icons" style={{ color: '#00a884' }}>auto_awesome</span>
+          <span className="sidebar-label" style={{ color: '#00a884' }}>AI</span>
         </button>
       </div>
 

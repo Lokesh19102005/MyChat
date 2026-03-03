@@ -152,7 +152,7 @@ router.post('/forget-password', async (req, res) => {
 
         try {
             const { data, error } = await resend.emails.send({
-                from: "onboarding@resend.dev",
+                from: "noreply@talkopia.in",
                 to: email,
                 subject: 'Password Reset Request - MyChat',
                 html: `
