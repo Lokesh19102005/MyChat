@@ -8,7 +8,7 @@
   width: 340px;
   min-width: 300px;
   max-width: 400px;
-  height: 100vh;
+  height: 100%;
   background: var(--wa-bg-dark);
   border-right: 1px solid var(--wa-border);
 }
@@ -238,7 +238,7 @@
   .chat-list {
     width: 100%;
     max-width: none;
-    height: calc(100vh - 56px);
+    height: calc(100% - 56px);
   }
 }
 

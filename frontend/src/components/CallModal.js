@@ -136,40 +136,10 @@ const CallModal = () => {
         <div className="call-modal-overlay">
             <div className={`call-modal ${showVideoMode ? 'video-mode' : ''}`}>
 
-                {/* 
-                  ALWAYS render the remote video element, even if hidden.
-                  This is CRITICAL for audio playback in all call types.
+                {/*
+                  IMPORTANT: Media tags are implemented below inside the media-container.
+                  Previously duplicate tags here caused stacking and ref capture bugs.
                 */}
-                <video
-                    className="remote-video"
-                    autoPlay
-                    playsInline
-                    ref={remoteVideoRef}
-                    onLoadedMetadata={onRemoteLoaded}
-                    style={{
-                        display: showVideoMode && hasRemoteVideo ? 'block' : 'none',
-                        position: 'absolute', // Ensure it doesn't affect layout when hidden
-                        width: '1px',
-                        height: '1px',
-                        opacity: showVideoMode && hasRemoteVideo ? 1 : 0
-                    }}
-                />
-
-                {/* 
-                  ALWAYS render local video element too, hidden if not needed.
-                  This ensures local stream is kept active.
-                */}
-                <video
-                    className="local-video"
-                    autoPlay
-                    playsInline
-                    muted
-                    ref={localVideoRef}
-                    onLoadedMetadata={onLocalLoaded}
-                    style={{
-                        display: showVideoMode && hasLocalVideo ? 'block' : 'none',
-                    }}
-                />
 
                 {/* Video container - visual part only */}
                 {showVideoMode && (

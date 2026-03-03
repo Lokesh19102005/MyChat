@@ -4,7 +4,7 @@
 
 .home-container {
   display: flex;
-  height: 100vh;
+  height: 100%;
   width: 100vw;
   overflow: hidden;
   background: var(--wa-bg-dark);
@@ -80,7 +80,7 @@
   }
 
   .chat-area {
-    height: calc(100vh - 56px);
+    height: calc(100% - 56px);
   }
 
   .welcome-screen {
